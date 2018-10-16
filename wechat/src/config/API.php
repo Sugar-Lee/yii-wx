@@ -13,6 +13,6 @@ class API{
     const URL_TOKEN_GET = 'https://api.weixin.qq.com/cgi-bin/token';
     //获取不受限制的小程序码
     const URL_UN_LIMIT_CREATE = 'https://api.weixin.qq.com/wxa/getwxacodeunlimit';
-    //获取不受限制的小程序码
+    //获取永久的小程序码
     const URL_CREATE = 'https://api.weixin.qq.com/wxa/getwxacode';
 }

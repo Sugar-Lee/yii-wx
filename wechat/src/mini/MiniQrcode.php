@@ -33,7 +33,7 @@ class MiniQrcode extends Driver
      */
     public function unLimit($scene,$page,$extra = []){
         $params = ['json' =>array_merge(['scene'=>$scene,'page'=>$page],$extra)];
-        $response = $this->POST(API::URL_UN_LIMIT_CREATE."?access_token=".$this->accessToken,$params);
+        $response = $this->post(API::URL_UN_LIMIT_CREATE."?access_token=".$this->accessToken,$params);
 
         if($response->getStatusCode != 200){
             \Yii::error('miniProgram:code2Session--'.self::ERROR_NO_RESPONSE);
