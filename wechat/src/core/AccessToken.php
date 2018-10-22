@@ -6,9 +6,9 @@
  * Time: 17:56
  */
 namespace common\components\wechat\src\core;
-use common\components\wechat\src\config\API;
-
-class AccessToken extends Driver
+use common\components\wechat\src\config\Config;
+use common\utils\ClientUtils;
+class AccessToken
 {
     public $appId;
     public $appSecret;
@@ -16,7 +16,6 @@ class AccessToken extends Driver
 
     public function __construct(array $config = [])
     {
-        parent::__construct($config);
         $this->appSecret = $config['appSecret'];
         $this->appId = $config['appId'];
     }
@@ -28,16 +27,18 @@ class AccessToken extends Driver
      * @author abei<abei@nai8.me>
      * @return string
      */
-    public function getToken($cacheRefresh = false){
+    public function getToken($cacheRefresh = true){
         $cacheKey = "{$this->cacheKey}-{$this->appId}";
         if($cacheRefresh == true){
-            \Yii::$app->cache->delete($cacheKey);
+            \Yii::$app->dbCache->delete($cacheKey);
         }
-        $data = \Yii::$app->cache->get($cacheKey);
+        $data = \Yii::$app->dbCache->get($cacheKey);
         if($data == false){
             $token = $this->getTokenFromServer();
-            $data = $token['access_token'];
-            \Yii::$app->cache->set($cacheKey,$data,$token['expires_in']-1200);
+            if(isset($token['access_token'])){
+                $data = $token['access_token'];
+                \Yii::$app->dbCache->set($cacheKey,$data,$token['expires_in']-1200);
+            }
         }
         return $data;
     }
@@ -56,15 +57,15 @@ class AccessToken extends Driver
                 'grant_type' => 'client_credential',
             ]
         ];
-        $response = $this->get(API::URL_TOKEN_GET,$params);
+        $response = (new ClientUtils([]))->get(Config::URL_TOKEN_GET,$params);
         // 状态码
         // response 具体内容
         if($response->getStatusCode != 200){
-            \Yii::error('miniProgram:code2Session--'.self::ERROR_NO_RESPONSE);
+            \Yii::error('miniProgram:getTokenFromServer--'.$response->getStatusCode);
         }
         $data = json_decode($response->getBody(),true);
         if(!isset($data['access_token'])){
-            \Yii::error('miniProgram:code2Session--'.$data['errcode'].$data['errmsg']);
+            \Yii::error('miniProgram:getTokenFromServer--'.$data['errcode'].$data['errmsg']);
         }
         return $data;
     }

@@ -6,8 +6,10 @@
  * Time: 15:51
  */
 namespace common\components\wechat\src\mini;
-use common\components\wechat\src\core\Driver;
-class MiniProgram extends Driver
+use yii\base\Component;
+use common\components\wechat\src\core\AccessToken;
+use common\utils\ClientUtils;
+class MiniProgram extends Component
 {
     use MiniProgramTrait;
     public $appId;
@@ -20,9 +22,14 @@ class MiniProgram extends Driver
     public $sessionKey;
     public $cache;
 
+    public $client;
+    private $accessToken;
+
     public function init()
     {
         parent::init();
+        $this->accessToken = (new AccessToken(['appId'=>$this->appId,'appSecret'=>$this->appSecret]))->getToken();
+        $this->client = new ClientUtils([]);
 
     }
 
@@ -66,8 +73,8 @@ class MiniProgram extends Driver
      * @date 2018/10/12 17:37
      * @return \Psr\Http\Message\StreamInterface
      */
-    public function unLimit($scene,$page,$extra = []){
-        $qr = new MiniQrcode(['appId'=>$this->appId,'appSecret'=>$this->appSecret]);
-        return $qr->unLimit($scene,$page,$extra);
+    public function getUnLimit($scene,$page,$extra = []){
+//        $qr = new MiniQrcode(['appId'=>$this->appId,'appSecret'=>$this->appSecret]);
+        return $this->unLimit($scene,$page,$extra);
     }
 }
