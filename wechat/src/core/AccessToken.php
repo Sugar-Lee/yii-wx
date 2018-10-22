@@ -60,8 +60,8 @@ class AccessToken
         $response = (new ClientUtils([]))->get(Config::URL_TOKEN_GET,$params);
         // 状态码
         // response 具体内容
-        if($response->getStatusCode != 200){
-            \Yii::error('miniProgram:getTokenFromServer--'.$response->getStatusCode);
+        if($response->getStatusCode() != 200){
+            \Yii::error('miniProgram:getTokenFromServer--'.$response->getStatusCode());
         }
         $data = json_decode($response->getBody(),true);
         if(!isset($data['access_token'])){

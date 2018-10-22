@@ -32,8 +32,8 @@ trait MiniProgramTrait
         ];
         $response = $this->client->get(Config::URL_TO_SESSION,$params);
 
-        if($response->getStatusCode != 200){
-            \Yii::error('miniProgram:code2Session--'.$response->getStatusCode);
+        if($response->getStatusCode() != 200){
+            \Yii::error('miniProgram:code2Session--'.$response->getStatusCode());
         }
         $data = json_decode($response->getBody(),true);
         return $data;
@@ -52,8 +52,8 @@ trait MiniProgramTrait
         $params = ['json' =>array_merge(['scene'=>$scene,'page'=>$page],$extra)];
         $response = $this->client->post(Config::URL_UN_LIMIT_CREATE."?access_token=".$this->accessToken,$params);
 
-        if($response->getStatusCode != 200){
-            \Yii::error('miniProgram:unLimit--'.$response->getStatusCode);
+        if($response->getStatusCode() != 200){
+            \Yii::error('miniProgram:unLimit--'.$response->getStatusCode());
         }
 
         $contentType = $response->getHeaders()['Content-Type'];
@@ -79,8 +79,8 @@ trait MiniProgramTrait
         $params = array_merge(['path'=>$path],$extra);
         $response = $this->client->post(Config::URL_CREATE."?access_token=".$this->accessToken,$params);
 
-        if($response->getStatusCode != 200){
-            \Yii::error('miniProgram:forever--'.$response->getStatusCode);
+        if($response->getStatusCode() != 200){
+            \Yii::error('miniProgram:forever--'.$response->getStatusCode());
         }
         $contentType = $response->getHeaders()['Content-Type'];
         if(strpos($contentType[0],'json') != false){
